@@ -1,47 +1,27 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.UI;
 
-[RequireComponent(typeof(Slider))]
-public class SmoothHealthBar : MonoBehaviour
+public class SmoothHealthBar : HealthBar
 {
-    [SerializeField] private Health _health;
-    [SerializeField] private float _healthChangeSpeed = 1f;
+    [SerializeField] private float _valueChangeSpeed = 1f;
 
     private float _targetValue;
-    private Slider _slider;
 
     private Coroutine _smoothCoroutine;
 
-    private void Awake()
+    protected override void OnValueChanged(int currentValue, int maxValue)
     {
-        _slider = GetComponent<Slider>();
+        _slider.maxValue = maxValue;
+        _targetValue = currentValue;
+
+        _smoothCoroutine ??= StartCoroutine(ChangeValueSmooth());
     }
 
-    private void OnEnable()
-    {
-        _health.HealthChanged += OnHealthChanged;
-    }
-
-    private void OnDisable()
-    {
-        _health.HealthChanged -= OnHealthChanged;
-    }
-
-    private void OnHealthChanged(int currentHealth, int maxHealth)
-    {
-        _slider.maxValue = maxHealth;
-        _targetValue = currentHealth;
-
-        if (_smoothCoroutine == null)
-            _smoothCoroutine = StartCoroutine(ChangeHealthSmooth());
-    }
-
-    private IEnumerator ChangeHealthSmooth()
+    private IEnumerator ChangeValueSmooth()
     {
         while (_slider.value != _targetValue)
         {
-            _slider.value = Mathf.MoveTowards(_slider.value, _targetValue, _healthChangeSpeed * Time.deltaTime);
+            _slider.value = Mathf.MoveTowards(_slider.value, _targetValue, _valueChangeSpeed * Time.deltaTime);
             yield return null;
         }
 

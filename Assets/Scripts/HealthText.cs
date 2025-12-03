@@ -2,9 +2,8 @@ using UnityEngine;
 using TMPro;
 
 [RequireComponent(typeof(TMP_Text))]
-public class HealthText : MonoBehaviour
+public class HealthText : HealthUI
 {
-    [SerializeField] private Health _health;
     private TMP_Text _text;
 
     private void Awake()
@@ -12,18 +11,8 @@ public class HealthText : MonoBehaviour
         _text = GetComponent<TMP_Text>();
     }
 
-    private void OnEnable()
+    protected override void OnValueChanged(int currentValue, int maxValue)
     {
-        _health.HealthChanged += OnHealthChanged;
-    }
-
-    private void OnDisable()
-    {
-        _health.HealthChanged -= OnHealthChanged;
-    }
-
-    private void OnHealthChanged(int currentHealth, int maxHealth)
-    {
-        _text.text = $"{currentHealth} / {maxHealth}";
+        _text.text = $"{currentValue} / {maxValue}";
     }
 }
