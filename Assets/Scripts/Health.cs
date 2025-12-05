@@ -3,26 +3,26 @@ using UnityEngine;
 
 public class Health : MonoBehaviour
 {
-    [SerializeField] private int _currentHealth;
-    [SerializeField] private int _maxHealth;
+    [SerializeField] private int _currentValue;
+    [SerializeField] private int _maxValue;
 
     public event Action Died;
     public event Action<Vector2> Damaged;
-    public event Action<int, int> HealthChanged;
+    public event Action<int, int> ValueChanged;
 
     public bool TryHeal(int healAmount)
     {
-        if (_currentHealth < _maxHealth)
+        if (_currentValue < _maxValue)
         {
-            if (_currentHealth + healAmount > _maxHealth)
-                _currentHealth = _maxHealth;
+            if (_currentValue + healAmount > _maxValue)
+                _currentValue = _maxValue;
             else
-                _currentHealth += healAmount;
+                _currentValue += healAmount;
         }
 
-        HealthChanged?.Invoke(_currentHealth, _maxHealth);
+        ValueChanged?.Invoke(_currentValue, _maxValue);
 
-        return _currentHealth < _maxHealth;
+        return _currentValue < _maxValue;
     }
 
     public void TakeDamage(int damage, Vector2 damageSource)
@@ -30,15 +30,15 @@ public class Health : MonoBehaviour
         if (damage < 0)
             return;
 
-        if (_currentHealth - damage >= 0)
-            _currentHealth -= damage;
+        if (_currentValue - damage >= 0)
+            _currentValue -= damage;
         else
-            _currentHealth = 0;
+            _currentValue = 0;
 
-        if (_currentHealth <= 0)
+        if (_currentValue <= 0)
             Died?.Invoke();
 
-        HealthChanged?.Invoke(_currentHealth, _maxHealth);
+        ValueChanged?.Invoke(_currentValue, _maxValue);
 
         Damaged?.Invoke(damageSource);
     }

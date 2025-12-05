@@ -1,30 +1,27 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.UI;
 
-[RequireComponent(typeof(Slider))]
 public class SmoothHealthBar : HealthBar
 {
-    [SerializeField] private float _healthChangeSpeed = 1f;
+    [SerializeField] private float _valueChangeSpeed = 1f;
 
     private float _targetValue;
 
     private Coroutine _smoothCoroutine;
 
-    protected override void OnHealthChanged(int currentHealth, int maxHealth)
+    protected override void OnValueChanged(int currentValue, int maxValue)
     {
-        _slider.maxValue = maxHealth;
-        _targetValue = currentHealth;
+        _slider.maxValue = maxValue;
+        _targetValue = currentValue;
 
-        if (_smoothCoroutine == null)
-            _smoothCoroutine = StartCoroutine(ChangeHealthSmooth());
+        _smoothCoroutine ??= StartCoroutine(ChangeValueSmooth());
     }
 
-    private IEnumerator ChangeHealthSmooth()
+    private IEnumerator ChangeValueSmooth()
     {
         while (_slider.value != _targetValue)
         {
-            _slider.value = Mathf.MoveTowards(_slider.value, _targetValue, _healthChangeSpeed * Time.deltaTime);
+            _slider.value = Mathf.MoveTowards(_slider.value, _targetValue, _valueChangeSpeed * Time.deltaTime);
             yield return null;
         }
 
