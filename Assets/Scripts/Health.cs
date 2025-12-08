@@ -5,6 +5,7 @@ public class Health : MonoBehaviour
 {
     [SerializeField] private int _currentValue;
     [SerializeField] private int _maxValue;
+    [SerializeField] private bool _isAlive = true;
 
     public event Action Died;
     public event Action<Vector2> Damaged;
@@ -18,7 +19,7 @@ public class Health : MonoBehaviour
         Add(healAmount);
     }
 
-    public void TakeDamage(int damage, Vector2 damageSource)
+    public void TakeDamage(int damage)
     {
         if (damage < 0)
             return;
@@ -27,12 +28,13 @@ public class Health : MonoBehaviour
 
         if (_currentValue <= 0)
             Died?.Invoke();
-
-        Damaged?.Invoke(damageSource);
     }
 
     private void Add(int value)
     {
+        if (!_isAlive)
+            return;
+
         float _lastValue = _currentValue;
 
         _currentValue += value;
@@ -41,5 +43,8 @@ public class Health : MonoBehaviour
 
         if (_lastValue != _currentValue)
             ValueChanged?.Invoke(_currentValue, _maxValue);
+
+        if (_currentValue <= 0)
+            _isAlive = false;
     }
 }
