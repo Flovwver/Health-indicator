@@ -13,7 +13,6 @@ public class HealthBar : HealthUI
 
     protected override void OnValueChanged(int currentValue, int maxValue)
     {
-        _slider.maxValue = maxValue;
-        _slider.value = currentValue;
+        _slider.value = (float) currentValue / maxValue;
     }
 }

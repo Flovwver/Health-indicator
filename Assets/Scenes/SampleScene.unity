@@ -542,8 +542,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd68e8ae7820b25499652112931d5b77, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _currentHealth: 100
-  _maxHealth: 100
+  _currentValue: 100
+  _maxValue: 100
 --- !u!4 &577593576
 Transform:
   m_ObjectHideFlags: 0
@@ -1557,7 +1557,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _health: {fileID: 577593575}
-  _healthChangeSpeed: 25
+  _valueChangeSpeed: 1
 --- !u!1 &1798686204
 GameObject:
   m_ObjectHideFlags: 0

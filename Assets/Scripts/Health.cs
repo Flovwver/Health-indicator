@@ -10,19 +10,12 @@ public class Health : MonoBehaviour
     public event Action<Vector2> Damaged;
     public event Action<int, int> ValueChanged;
 
-    public bool TryHeal(int healAmount)
+    public void TakeHeal(int healAmount)
     {
-        if (_currentValue < _maxValue)
-        {
-            if (_currentValue + healAmount > _maxValue)
-                _currentValue = _maxValue;
-            else
-                _currentValue += healAmount;
-        }
+        if (healAmount < 0)
+            return;
 
-        ValueChanged?.Invoke(_currentValue, _maxValue);
-
-        return _currentValue < _maxValue;
+        Add(healAmount);
     }
 
     public void TakeDamage(int damage, Vector2 damageSource)
@@ -30,16 +23,23 @@ public class Health : MonoBehaviour
         if (damage < 0)
             return;
 
-        if (_currentValue - damage >= 0)
-            _currentValue -= damage;
-        else
-            _currentValue = 0;
+        Add(-damage);
 
         if (_currentValue <= 0)
             Died?.Invoke();
 
-        ValueChanged?.Invoke(_currentValue, _maxValue);
-
         Damaged?.Invoke(damageSource);
+    }
+
+    private void Add(int value)
+    {
+        float _lastValue = _currentValue;
+
+        _currentValue += value;
+
+        _currentValue = Mathf.Clamp(_currentValue, 0, _maxValue);
+
+        if (_lastValue != _currentValue)
+            ValueChanged?.Invoke(_currentValue, _maxValue);
     }
 }
